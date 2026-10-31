@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-import { optionalText, requiredDate, requiredText } from "@/lib/validation";
+import { httpUrl, optionalText, requiredDate, requiredText } from "@/lib/validation";
 
 export const leaveRequestSchema = z.object({
   leaveTypeId: requiredText,
   startDate: requiredDate,
   endDate: requiredDate,
   reason: optionalText,
-  attachmentUrl: z.union([z.url("Attachment must be a link"), z.literal("").transform(() => null)]).optional(),
+  attachmentUrl: z.union([httpUrl("Attachment must be an http(s) link"), z.literal("").transform(() => null)]).optional(),
 });
 
 export const leaveTypeSchema = z.object({

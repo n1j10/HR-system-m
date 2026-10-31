@@ -42,3 +42,9 @@ export function optionalWholeNumber(min: number, max: number) {
     .transform((value) => (value ? Number(value) : null))
     .pipe(z.number().int().min(min).max(max).nullable());
 }
+
+/**
+ * A link that is rendered in an <a href>. Only http(s) is allowed so a stored
+ * "javascript:" URL can never run script in another user's browser (stored XSS).
+ */
+export const httpUrl = (message: string) => z.url({ protocol: /^https?$/, message });
