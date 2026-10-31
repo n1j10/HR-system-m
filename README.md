@@ -1,5 +1,50 @@
-# HR System
+<div align="center">
 
+# 🧑‍💼 HR System
+
+### Human resources platform with 14 modules, 7 roles and a full audit trail
+
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-19-149ECA?style=for-the-badge&logo=react&logoColor=white) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white) ![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-DB-4169E1?style=for-the-badge&logo=postgresql&logoColor=white) ![Clerk](https://img.shields.io/badge/Clerk-Auth-6C47FF?style=for-the-badge&logo=clerk&logoColor=white) ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-components-000000?style=for-the-badge&logo=shadcnui&logoColor=white) ![Zod](https://img.shields.io/badge/Zod-validation-3E67B1?style=for-the-badge&logo=zod&logoColor=white) ![Vitest](https://img.shields.io/badge/Vitest-tests-6E9F18?style=for-the-badge&logo=vitest&logoColor=white) ![Vercel](https://img.shields.io/badge/Vercel-deployed-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
+**[📦 Source](https://github.com/n1j10/HR-system-m)**
+
+</div>
+
+---
+
+## 🏗️ Architecture at a glance
+
+```mermaid
+flowchart LR
+  B[Browser] --> C[Clerk middleware]
+  C --> P[Pages · RSC]
+  P -->|Server Actions| F[features/*/actions.ts]
+  F --> R[requirePermission · RBAC]
+  F --> AU[Audit log]
+  F -->|Prisma| DB[(PostgreSQL · 19 models)]
+```
+
+- **RBAC**: one permission matrix (`lib/permissions.ts`) drives pages, actions, API routes **and** navigation.
+- **Team scoping**: managers can only act on their own reports (leaves, goals, reviews).
+- **Audit log**: every important change records who did what, and when.
+- **Payroll engine**: unit-tested with Vitest (base + allowances + bonus − absences − unpaid leave − deductions).
+
+## 🔐 Security
+
+Security was designed in from the start:
+
+| Area | Implementation |
+| --- | --- |
+| Authorization | `requirePermission()` runs first in every Server Action and API route; self-service actions also check ownership |
+| Stored XSS | User-supplied links (résumés, documents, attachments) must be **http(s)**; `javascript:` URLs are rejected |
+| CSV injection | Exports neutralize cells that start with `=`, `+`, `-` or `@`, so Excel never evaluates them as formulas |
+| Public endpoint | The careers application form has length limits and allows one application per email |
+| Soft deletes | Employees are archived, never hard-deleted |
+| HTTP headers | HSTS, `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`; `X-Powered-By` removed |
+
+> Secrets are stored only in environment variables. `.env*` is git-ignored, and `.env.example` contains placeholders only.
+
+---
 A human resources system built with **Next.js 16**, **Clerk** (sign-in), **Prisma + PostgreSQL**, **shadcn/ui** and **Tailwind CSS**.
 
 The code is written to be easy to read for junior developers: small files, clear names, one way of doing things everywhere.
@@ -208,3 +253,11 @@ Employees are never deleted. "Archive" sets `deletedAt`, and every query filters
 - Social security and tax rules in payroll
 - Onboarding / offboarding checklists
 - Cron job to remind about expiring documents and probation ends
+
+## 👤 Author
+
+**n1j10**, full-stack engineer (Next.js · TypeScript · Node.js · PostgreSQL)
+
+[![GitHub](https://img.shields.io/badge/GitHub-n1j10-181717?style=for-the-badge&logo=github)](https://github.com/n1j10)
+
+> If you find this project useful, a ⭐ on the repo is appreciated.
